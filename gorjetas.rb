@@ -1,4 +1,4 @@
-puts "Sistema de cálculo de gorjetas"
+puts "Pizzaria Ruby"
 puts ""
 
 class Gorjetas
@@ -36,6 +36,8 @@ class Gorjetas
   def menu
     pratos_bebidas
     puts "Menu"
+    puts "COBRAMOS TAXA DE SERVIÇOS DE 10%"
+    puts ""
     @itens.each_with_index do |item, indice|
       puts "#{indice + 1}. #{item[:nome]} - R$ #{item[:preco]}"
     end
@@ -45,11 +47,11 @@ class Gorjetas
     loop do
       puts "Digite o número do prato/bebida | 0 para sair"
       numero_prato = gets.chomp.to_i
-
+  
       break if numero_prato == 0
-
+  
       if numero_prato > 0 && numero_prato <= @itens.length
-        @pratos_escolhidos << @itens[numero_prato - 1][:preco]
+        @pratos_escolhidos << @itens[numero_prato - 1]
         puts "Prato #{numero_prato} adicionado!"
       else
         puts "Número inválido, tente novamente"
@@ -57,10 +59,19 @@ class Gorjetas
     end
     @pratos_escolhidos
   end
+  
 
   def calcula_conta
-    @total = @pratos_escolhidos.sum
+    @total = @pratos_escolhidos.sum { |item| item[:preco] }
     puts "Valor consumido: R$ #{@total}"
+  end
+  
+
+  def valores_detalhados
+    puts "Conta detalhada"
+    @pratos_escolhidos.each_with_index do |item, indice|
+      puts "#{indice + 1}. #{item[:nome]} - R$ #{item[:preco]}"
+    end
   end
 
   def calcula_gorjeta
@@ -72,5 +83,6 @@ end
 gorjetas = Gorjetas.new
 gorjetas.menu
 gorjetas.escolher_prato
+gorjetas.valores_detalhados
 gorjetas.calcula_conta
 gorjetas.calcula_gorjeta
