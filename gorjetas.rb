@@ -3,13 +3,16 @@ puts ""
 
 class Gorjetas
   def initialize
-    @itens = []
-    @pratos_escolhidos = []
+    @itens_pizza = []
+    @itens_bebida = []
+    @pizzas_escolhidas = []
+    @bebidas_escolhidas = []
     @total = 0
+    pizzas_bebidas
   end
 
-  def pratos_bebidas
-    @itens = [
+  def pizzas_bebidas
+    @itens_pizza = [
       { nome: "Pizza Margherita", preco: 35.00 },
       { nome: "Pizza Calabresa", preco: 40.00 },
       { nome: "Pizza Quatro Queijos", preco: 45.00 },
@@ -19,7 +22,9 @@ class Gorjetas
       { nome: "Pizza Vegetariana", preco: 38.00 },
       { nome: "Pizza Napolitana", preco: 36.00 },
       { nome: "Pizza de Atum", preco: 44.00 },
-      { nome: "Pizza de Bacon com Cheddar", preco: 48.00 },
+      { nome: "Pizza de Bacon com Cheddar", preco: 48.00 }
+    ]
+    @itens_bebida = [
       { nome: "Refrigerante (Lata)", preco: 5.00 },
       { nome: "Refrigerante (1L)", preco: 8.00 },
       { nome: "Suco Natural (Copo)", preco: 7.00 },
@@ -33,44 +38,69 @@ class Gorjetas
     ]
   end
 
-  def menu
-    pratos_bebidas
-    puts "Menu"
+  def menu_pizzas
+    puts "Menu de Pizzas"
     puts "COBRAMOS TAXA DE SERVIÇOS DE 10%"
     puts ""
-    @itens.each_with_index do |item, indice|
+    @itens_pizza.each_with_index do |item, indice|
       puts "#{indice + 1}. #{item[:nome]} - R$ #{item[:preco]}"
     end
   end
 
-  def escolher_prato
+  def menu_bebidas
+    puts "Menu de Bebidas"
+    @itens_bebida.each_with_index do |item, indice|
+      puts "#{indice + 1}. #{item[:nome]} - R$ #{item[:preco]}"
+    end
+  end
+
+  def escolher_pizza
     loop do
-      puts "Digite o número do prato/bebida | 0 para sair"
+      puts "Escolha o número do sabor da pizza | 0 para sair"
       numero_prato = gets.chomp.to_i
   
       break if numero_prato == 0
   
-      if numero_prato > 0 && numero_prato <= @itens.length
-        @pratos_escolhidos << @itens[numero_prato - 1]
-        puts "Prato #{numero_prato} adicionado!"
+      if numero_prato > 0 && numero_prato <= @itens_pizza.length
+        @pizzas_escolhidas << @itens_pizza[numero_prato - 1]
+        puts "Pizza #{numero_prato} adicionada!"
       else
         puts "Número inválido, tente novamente"
       end
     end
-    @pratos_escolhidos
+    @pizzas_escolhidas
   end
   
+  def escolher_bebida
+    loop do
+      puts "Escolha o número da bebida | 0 para sair"
+      numero_bebida = gets.chomp.to_i
+
+      break if numero_bebida == 0
+
+      if numero_bebida > 0 && numero_bebida <= @itens_bebida.length
+        @bebidas_escolhidas << @itens_bebida[numero_bebida - 1]
+        puts "Bebida #{numero_bebida} adicionada!"
+      else
+        puts "Número inválido, tente novamente!"
+      end
+    end
+    @bebidas_escolhidas
+  end
 
   def calcula_conta
-    @total = @pratos_escolhidos.sum { |item| item[:preco] }
+    @total = @pizzas_escolhidas.sum { |item| item[:preco] }
+    @total += @bebidas_escolhidas.sum { |item| item[:preco] }
     puts "Valor consumido: R$ #{@total}"
   end
-  
 
   def valores_detalhados
     puts "Conta detalhada"
-    @pratos_escolhidos.each_with_index do |item, indice|
+    @pizzas_escolhidas.each_with_index do |item, indice|
       puts "#{indice + 1}. #{item[:nome]} - R$ #{item[:preco]}"
+    end
+    @bebidas_escolhidas.each_with_index do |item, indice|
+      puts "#{indice + 1 + @pizzas_escolhidas.length}. #{item[:nome]} - R$ #{item[:preco]}"
     end
   end
 
@@ -81,8 +111,16 @@ class Gorjetas
 end
 
 gorjetas = Gorjetas.new
-gorjetas.menu
-gorjetas.escolher_prato
+
+# Mostrar menu de pizzas e permitir escolha
+gorjetas.menu_pizzas
+gorjetas.escolher_pizza
+
+# Mostrar menu de bebidas e permitir escolha
+gorjetas.menu_bebidas
+gorjetas.escolher_bebida
+
+# Mostrar os detalhes da conta
 gorjetas.valores_detalhados
 gorjetas.calcula_conta
 gorjetas.calcula_gorjeta
